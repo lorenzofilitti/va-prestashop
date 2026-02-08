@@ -1,0 +1,46 @@
+services:
+  # main supporting DB
+  mariadb:
+    image: mariadb:10.11
+    container_name: prestashop-db
+    # issue this command to allow for large SQL queries to be executed.
+    command: --max-allowed-packet=64M
+    # set the username and passwords to access the local DB during the test phase.
+    environment:
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=prestashop
+      - MYSQL_USER=prestashop
+      - MYSQL_PASSWORD=prestashop
+    # set a volume to make data stored in DB persistent. Save in db_data directory.
+    volumes:
+      - db_data:/var/lib/mysql
+
+  prestashop:
+    build: ./src/prestashop/
+    container_name: prestashop-app
+    # ensures that prestashop's container is run only after mariadb is up.
+    depends_on:
+      - mariadb
+    ports:
+      - 8080:80
+    environment:
+      - DB_SERVER=mariadb
+      - DB_USER=prestashop
+      - DB_PASSWD=prestashop
+      - DB_NAME=prestashop
+    # this ensures that all data in the prestashop container is mapped to the named ps_data volume
+    volumes:
+      - ps_data:/var/www/html
+
+  # use adminer to access data stored in DB interactively. 
+  # The service can be reached on localhost at port 8081.
+  adminer:
+    image: adminer:latest
+    container_name: prestashop-adminer
+    ports:
+      - 8081:8080
+
+# notice the volumes will be stored locally by docker, not directly in the current directory
+volumes:
+  ps_data:
+  db_data:
