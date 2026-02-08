@@ -1,0 +1,2 @@
+FROM prestashop/prestashop:8
+COPY ./restore_cart.php /var/www/html/restore_cart.php
