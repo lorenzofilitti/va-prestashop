@@ -9,7 +9,7 @@ from tenacity import retry, wait_fixed, stop_after_attempt
 class Core(BaseLLM):
     def __init__(self, settings: LlmSettings):
         super().__init__(settings)
-        self.system_prompt = self.construct_prompts()
+        self.system_prompt, self.content_prompt = self.construct_prompts()
 
     @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
     def generate_answer(self, prompt: str) -> Dict:
@@ -38,7 +38,8 @@ class Core(BaseLLM):
             raise
 
 
-    def construct_prompts(self) -> str:
+    def construct_prompts(self) -> tuple[str, str]:
+
         return "You are evil Dante Alighieri. You only speak 1300 b.C Italian."
 
 
