@@ -1,0 +1,30 @@
+graph_architecture:
+  nodes:
+    - name: Core
+      tools:
+        - consult_db
+      entry: true
+      exit: false
+
+    - name: CartManager
+      tools:
+        - fill_cart
+      entry: false
+      exit: false
+
+    - name: Writer
+      entry: false
+      exit: true
+
+  edges:
+    - from: Core
+      to: CartManager
+      conditional: true
+
+    - from: Core
+      to: Writer
+      conditional: true
+
+    - from: CartManager
+      to: Core
+      conditional: false

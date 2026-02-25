@@ -7,11 +7,9 @@ from pydantic import BaseModel
 
 class Message(BaseModel):
     conversation_id: str
-    message_id: str
-    role: Literal["assistant", "user"]
+    author: Literal["assistant", "user"]
     message: Optional[str]
-    turn: int
-    created_at: str
+    # turn: int
 
 
 class ConversationManager:
@@ -23,15 +21,11 @@ class ConversationManager:
             conversation_id: str,
             role: Literal["assistant", "user"],
             message: str,
-            turn: int,
     ) -> Message:
         return Message(
             conversation_id=conversation_id,
-            message_id=str(uuid4()),
             role=role,
             message=message,
-            turn=turn,
-            created_at=datetime.now().isoformat(),
         )
 
     @staticmethod

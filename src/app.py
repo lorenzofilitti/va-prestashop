@@ -1,31 +1,27 @@
-from typing import Optional
-
+from graph.invoke_graph import invoke_graph
 import requests
 from requests.auth import HTTPBasicAuth
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from src.llms.core import Core
-from src.llms.base_llm import LlmSettings
 
 app = FastAPI()
 
 class Body(BaseModel):
     message: str
-    conversation_id: str
+    session_id: str
+    user_id: str
 
 
-@app.post("/generate")
+@app.post("/invoke")
 def generate(body: Body):
-    resp: dict = Core(settings=LlmSettings(
-        model="llama3.2"
-    )).generate_answer(body.message)
+    final_answer = invoke_graph(
+        user_query=body.message,
+        session_id=body.session_id,
+        user_id=body.user_id
+    )
 
-
-    requests.post(f"http://localhost:8080/api/carts/{user_id}")
-
-
-    return {"response": f"{resp['response']}!"}
+    return {"response": final_answer}
 
 
 @app.get("/cart")

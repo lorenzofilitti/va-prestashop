@@ -70,7 +70,9 @@ class RedisDB:
         messages_key = f"{message.conversation_id}:messages"
         metadata_key = f"{message.conversation_id}:metadata"
         try:
-            conversation: List[Dict[str, str]] = json.loads(self.client.get(message.conversation_id) or "[]")
+            conversation: List[Dict[str, str]] = json.loads(
+                self.client.get(f"{message.conversation_id}:messages") or "[]"
+            )
             conversation.append({"author": message.author, "message": message.message})
 
             self.client.set(messages_key, json.dumps(conversation))
@@ -155,4 +157,11 @@ class RedisDB:
 
 
 
+if __name__=="__main__":
+    db = RedisDB()
+    db.create_conversation(
+        conversation_id="test2",
+        user_id="userid",
+
+    )
 
