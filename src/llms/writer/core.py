@@ -8,7 +8,7 @@ from llms.writer.prompt import WriterPrompt
 class Writer(BaseLLM):
     def __init__(self):
         super().__init__(
-            name="Writer", llm_settings=LLMSettings(), provider="ollama"
+            name="Writer", llm_settings=LLMSettings(), provider="openai"
         )
 
     def construct_prompts(self, *args, **kwargs) -> tuple[str, str]:

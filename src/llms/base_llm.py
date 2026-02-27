@@ -52,7 +52,7 @@ class BaseLLM(ABC):
         self.provider = provider
 
         self._localhost_endpoint = self._env_settings.localhost_endpoint
-        # self._openai_api_key = self._env_settings.openai_api_key
+        self._openai_api_key = self._env_settings.openai_api_key
 
         self.name = name
         self._llm = self._instantiate_openai_agent() if provider == "openai" else self._instantiate_ollama_agent()

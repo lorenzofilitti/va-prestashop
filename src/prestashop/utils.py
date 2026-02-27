@@ -15,6 +15,7 @@ class Product(BaseModel):
     price: float
     color: Optional[str]
 
+# TODO vedi come aggiungere oggetti al carrello tenendo conto del formato del xlm
 
 class Cart(BaseModel):
     products: List[Product]
