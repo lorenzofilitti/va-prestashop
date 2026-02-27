@@ -3,6 +3,8 @@ services:
   mariadb:
     image: mariadb:10.11
     container_name: prestashop-db
+    ports:
+      - "3306:3306"
     # issue this command to allow for large SQL queries to be executed.
     command: --max-allowed-packet=64M
     # set the username and passwords to access the local DB during the test phase.
@@ -32,7 +34,7 @@ services:
     volumes:
       - ps_data:/var/www/html
 
-  # use adminer to access data stored in DB interactively. 
+  # use adminer to access data stored in DB interactively.
   # The service can be reached on localhost at port 8081.
   adminer:
     image: adminer:latest
