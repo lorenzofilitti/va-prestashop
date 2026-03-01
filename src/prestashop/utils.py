@@ -1,7 +1,7 @@
 import logging
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import Element
-from typing import Set, Optional
+from typing import Set, Optional, List
 from dataclasses import fields
 
 import requests
@@ -10,7 +10,15 @@ from requests.auth import HTTPBasicAuth
 from pydantic import BaseModel
 
 
+class Product(BaseModel):
+    name: str
+    price: float
+    color: Optional[str]
+
+# TODO vedi come aggiungere oggetti al carrello tenendo conto del formato del xlm
+
 class Cart(BaseModel):
+    products: List[Product]
     id_lang: str
     id_currency: str
     id_customer: str
@@ -65,18 +73,16 @@ class PrestaShopManager:
             "quantity", "cart_row"
         }
 
-        for field in fields(data):
-            value = str(getattr(data, field.name))
-
-            if field.name in direct_fields:
-                element = cart.find(field.name)
+        for key, value in dict(data):
+            if key in direct_fields:
+                element = cart.find(key)
                 if element is not None:
                     element.text = value
 
-            elif field.name in nested_fields:
+            elif key in nested_fields:
                 cart_row = cart.find(".//associations/cart_rows/cart_row")
                 if cart_row is not None:
-                    element = cart_row.find(field.name)
+                    element = cart_row.find(key)
                     if element is not None:
                         element.text = value
 
